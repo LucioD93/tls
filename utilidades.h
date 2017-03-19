@@ -13,6 +13,7 @@
 	#include <ctype.h>
 	#include <pthread.h>
 	#include <dirent.h>
+	#include <libgen.h>
 
 	// Constantes
 	#define BUFSIZE 4096

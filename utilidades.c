@@ -43,19 +43,20 @@ FILE *outpot_ready(int opts, int cant, char** arr){
 }
 
 char *working_dir(){
+	char* cp;
+	char* cwd = malloc (sizeof (char) * BUFSIZE);
+
+	if(!(cp = getcwd(cwd, BUFSIZE))) {
+		printf("%s\n",MENSAJE_ERROR_ABRIR_DIR);
+	    exit(1);
+	}
+
 	if (directorio == NULL){
-		char* cp;
-		char* cwd = malloc (sizeof (char) * BUFSIZE);
-
-		if(!(cp = getcwd(cwd, BUFSIZE))) {
-			printf("%s\n",MENSAJE_ERROR_ABRIR_DIR);
-		    exit(1);
-		}
-
 		return cwd;			
-	} 
-	else {
+	} else {
 		// el peo es aqui xD
+		//Aqui cp sera 'tls'
+		cp = basename(cwd);
 
 		char* actualpath = malloc(sizeof(char)*BUFSIZE);
 
@@ -120,6 +121,8 @@ char *desencolar() {
 void tls(int t_num, FILE *outpot, char *act_dir){
 	DIR *dir;
 	struct dirent * dir_info;
+	char * full_path;
+	strcat(act_dir,"/");
 
 	if((dir = opendir(act_dir)) == NULL){
 		printf("%s: %s\n",act_dir,MENSAJE_ERROR_ABRIR_DIR);
@@ -128,8 +131,11 @@ void tls(int t_num, FILE *outpot, char *act_dir){
 
 	while ((dir_info = readdir(dir)) != NULL){
 		if (!es_oculto(dir_info->d_name)){
-			if (es_directorio(dir_info->d_name)){
-				encolar(dir_info->d_name);
+			full_path = strdup(act_dir);
+			strcat(full_path,dir_info->d_name);
+			printf("%s\n", full_path);
+			if (es_directorio(full_path)){
+				encolar(full_path);
 			}
 		}
 	}
