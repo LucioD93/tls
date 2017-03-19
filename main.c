@@ -44,11 +44,9 @@ int main(int argc, char** argv){
  	// Se crea el archivo [salida], de ser necesario
  	salida = outpot_ready(optind,argc,argv);
 
-	// Se trabaja con el directoria actual, si no se suministra uno
-	if (directorio == NULL) {
-		directorio = working_dir();
-	}
-
+	// Se asigna el directorio a trabajar
+	directorio = working_dir();
+	
 	// Se crean la cantidad de hilos pedidos en los argumentos
 	tls(numeroDeHilos, salida, directorio);
 

@@ -14,11 +14,15 @@
 	#include <pthread.h>
 	#include <dirent.h>
 
+	// Constantes
+	#define BUFSIZE 4096
+
 	// Declaracion de mensajes base
-	#define BUFSIZE 2048
 	extern const char *MENSAJE_ERROR_AYUDA;
 	extern const char *MENSAJE_AYUDA;
 	extern const char *MENSAJE_ERROR_ABRIR_ARCHIVO;
+	extern const char *MENSAJE_ERROR_ARGUMENTOS;
+	extern const char *MENSAJE_ERROR_ABRIR_DIR;
 
 	// Estructura para definir una lista de directorios a ser explorados
 	// Se manejara la estructura como una cola
@@ -27,8 +31,7 @@
 		struct _nodo *siguiente;
 	} nodo;
 
-	// Estructura para devolver el resultado del trabajo de un hilo y ser
-	// imprimido en la salida
+	// Estructura que contiene el numero de archivos y los bytes ocupados por estos
 	typedef struct _respuesta {
 		int numeroDeArchivos;
 		int numeroDeBytes;
@@ -50,7 +53,7 @@
 	void verificar_argumentos(int);
 	void help_handler(int , int);
 	FILE *outpot_ready(int , int, char**);
-	char * working_dir();
+	char *working_dir();
 	void tls(int, FILE*, char*);
 
 #else
