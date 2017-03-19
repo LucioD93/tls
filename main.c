@@ -39,14 +39,14 @@ int main(int argc, char** argv){
 		}
  	}
  	// Se manejan las situaciones para -h
- 	help_handler(hflag, argc);
+ 	manejo_de_ayuda(hflag, argc);
 
  	// Se crea el archivo [salida], de ser necesario
- 	salida = outpot_ready(optind,argc,argv);
+ 	salida = output_ready(optind,argc,argv);
 
 	// Se trabaja con el directoria actual, si no se suministra uno
 	if (directorio == NULL) {
-		directorio = working_dir();
+		directorio = get_directorio_actual();
 	}
 
 	// Se crean la cantidad de hilos pedidos en los argumentos

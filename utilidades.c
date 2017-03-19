@@ -15,18 +15,18 @@ void verificar_argumentos(int cantidad) {
 	}
 }
 
-void help_handler(int h, int cantidad){
+void manejo_de_ayuda(int h, int cantidad){
 	if (h == 1 && cantidad > 2) {
 		printf("%s\n", MENSAJE_ERROR_AYUDA);
 		exit(1);
- 	}	
+ 	}
 	if (h == 1) {
 		printf("%s\n",MENSAJE_AYUDA);
 		exit(0);
-	} 	
+	}
 }
 
-FILE *outpot_ready(int opts, int cant, char** arr){
+FILE *output_ready(int opts, int cant, char** arr){
 	if (opts < cant) {
 		if ((salida = fopen(arr[opts], "w")) == NULL) {
 			printf("%s %s\n",MENSAJE_ERROR_ABRIR_ARCHIVO, arr[opts]);
@@ -41,25 +41,25 @@ FILE *outpot_ready(int opts, int cant, char** arr){
 	return salida;
 }
 
-char *working_dir(){
+char *get_directorio_actual(){
 	char* cp;
-	char* cwd = malloc (sizeof (char) * BUFSIZE);
+	char* cwd = (char*) malloc (sizeof (char)*BUFSIZE);
 
 	if(!(cp = getcwd(cwd, BUFSIZE))) {
 		printf("Error obteniendo directorio actual\n");
 	    exit(1);
 	}
 
-	return cwd;	
+	return cwd;
 }
 
-void tls(int t_num, FILE *outpot, char *act_dir){
-	if (outpot == NULL){
-		printf("n: %d\n", t_num);
-		printf("d: %s\n", act_dir);
+void tls(int numeroDeHilos, FILE *output, char *directorioActual){
+	if (output == NULL){
+		printf("n: %d\n", numeroDeHilos);
+		printf("d: %s\n", directorioActual);
 	} else {
-		fprintf(outpot,"n: %d\n", t_num);
-		fprintf(outpot,"d: %s\n", act_dir);
+		fprintf(output,"n: %d\n", numeroDeHilos);
+		fprintf(output,"d: %s\n", directorioActual);
 	}
 
 }

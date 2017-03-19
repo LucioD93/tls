@@ -48,9 +48,9 @@
 
 	// Funciones a utilizar
 	void verificar_argumentos(int);
-	void help_handler(int , int);
-	FILE *outpot_ready(int , int, char**);
-	char * working_dir();
+	void manejo_de_ayuda(int , int);
+	FILE *output_ready(int , int, char**);
+	char * get_directorio_actual();
 	void tls(int, FILE*, char*);
 
 #else
