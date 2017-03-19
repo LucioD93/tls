@@ -8,7 +8,7 @@ int main(int argc, char** argv){
 
 	// Se definen las variables para ser capturadas como argumentos
 	int hflag = 0;
-	int numeroDeHilos = 0;
+	int numeroDeHilos = 1;
 	directorio = NULL;
 	salida = NULL;
 
@@ -52,6 +52,7 @@ int main(int argc, char** argv){
 	printf("d: %s\n", directorio);
 
 	// Se crean la cantidad de hilos pedidos en los argumentos
+	
 
 	return 0;
 }
