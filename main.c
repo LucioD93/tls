@@ -44,25 +44,13 @@ int main(int argc, char** argv){
  	// Se crea el archivo [salida], de ser necesario
  	salida = outpot_ready(optind,argc,argv);
 
-	printf("n: %d\n", numeroDeHilos);
-
+	// Se trabaja con el directoria actual, si no se suministra uno
 	if (directorio == NULL) {
-
-		char* cp;
-		char cwd[BUFSIZE];
-
-		if(!(cp = getcwd(cwd, BUFSIZE))) {
-			printf("Error obteniendo directorio actual\n");
-		    exit(1);
-		}
-		
-		directorio = cwd;
+		directorio = working_dir();
 	}
 
-	printf("d: %s\n", directorio);
-
 	// Se crean la cantidad de hilos pedidos en los argumentos
-	
+	tls(numeroDeHilos, salida, directorio);
 
 	return 0;
 }

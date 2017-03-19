@@ -50,7 +50,8 @@
 	void verificar_argumentos(int);
 	void help_handler(int , int);
 	FILE *outpot_ready(int , int, char**);
+	char * working_dir();
+	void tls(int, FILE*, char*);
 
 #else
-
 #endif

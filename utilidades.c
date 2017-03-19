@@ -33,10 +33,33 @@ FILE *outpot_ready(int opts, int cant, char** arr){
 			exit(1);
 		}
 		else {
-			printf("Salida: %s\n", arr[opts]);
+			//printf("Salida: %s\n", arr[opts]);
 			return salida;
 		}
 	}
 
 	return salida;
+}
+
+char *working_dir(){
+	char* cp;
+	char* cwd = malloc (sizeof (char) * BUFSIZE);
+
+	if(!(cp = getcwd(cwd, BUFSIZE))) {
+		printf("Error obteniendo directorio actual\n");
+	    exit(1);
+	}
+
+	return cwd;	
+}
+
+void tls(int t_num, FILE *outpot, char *act_dir){
+	if (outpot == NULL){
+		printf("n: %d\n", t_num);
+		printf("d: %s\n", act_dir);
+	} else {
+		fprintf(outpot,"n: %d\n", t_num);
+		fprintf(outpot,"d: %s\n", act_dir);
+	}
+
 }
