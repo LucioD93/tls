@@ -56,8 +56,9 @@ char *working_dir(){
 	} 
 	else {
 		// el peo es aqui xD
+
 		char* actualpath = malloc(sizeof(char)*BUFSIZE);
-		
+
 		realpath(directorio, actualpath);
 
 		return actualpath;
