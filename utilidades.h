@@ -15,7 +15,7 @@
 	#include <dirent.h>
 
 	// Declaracion de mensajes base
-	#define BUFSIZE 2048;
+	#define BUFSIZE 2048
 	extern const char *MENSAJE_ERROR_AYUDA;
 	extern const char *MENSAJE_AYUDA;
 	extern const char *MENSAJE_ERROR_ABRIR_ARCHIVO;

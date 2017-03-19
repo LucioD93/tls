@@ -45,8 +45,18 @@ int main(int argc, char** argv){
  	salida = outpot_ready(optind,argc,argv);
 
 	printf("n: %d\n", numeroDeHilos);
+
 	if (directorio == NULL) {
-		directorio = "..";
+
+		char* cp;
+		char cwd[BUFSIZE];
+
+		if(!(cp = getcwd(cwd, BUFSIZE))) {
+			printf("Error obteniendo directorio actual\n");
+		    exit(1);
+		}
+		
+		directorio = cwd;
 	}
 
 	printf("d: %s\n", directorio);

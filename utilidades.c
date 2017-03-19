@@ -38,9 +38,5 @@ FILE *outpot_ready(int opts, int cant, char** arr){
 		}
 	}
 
-	if (salida == NULL) {
-		printf("Salida estandar\n");
-	}
-
 	return salida;
 }
