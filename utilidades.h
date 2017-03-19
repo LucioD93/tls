@@ -47,6 +47,8 @@
 
 	// Funciones a utilizar
 	void verificar_argumentos(int);
+	void help_handler(int , int);
+	FILE *outpot_ready(int , int, char**);
 
 #else
 
