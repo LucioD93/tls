@@ -53,9 +53,13 @@
 	// Funciones a utilizar
 	void verificar_argumentos(int);
 	void help_handler(int , int);
-	FILE *outpot_ready(int , int, char**);
-	char *working_dir();
+	FILE *crear_salida(int , int, char**);
+	void working_dir(char**);
 	void tls(int, FILE*, char*);
+	int es_oculto(char*);
+	int es_directorio(char*);
+	void encolar(char*);
+	char* desencolar();
 
 #else
 #endif

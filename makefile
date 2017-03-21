@@ -9,8 +9,5 @@ main.o: main.c utilidades.h
 utilidades.o: utilidades.c utilidades.h
 	gcc -Wall -Wextra -g -c utilidades.c
 
-hilos.o: hilos.c utilidades.h
-	gcc -Wall -Wextra -g -c hilos.c
-
 clean:
 	rm -f *.o

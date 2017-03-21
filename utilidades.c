@@ -6,7 +6,7 @@ const char *MENSAJE_AYUDA = "Uso de tls:\n./tls [-h] | [-n <i>] [-d <directorio>
 const char *MENSAJE_ERROR_ABRIR_ARCHIVO = "Error! - No se pudo abrir archivo";
 const char *MENSAJE_ERROR_ARGUMENTOS = "Error! Maximo de argumentos superado\n Uso de tls:\n./tls [-h] | [-n <i>] [-d <directorio>] [salida]";
 const char *MENSAJE_ERROR_ABRIR_DIR = "Error! - No se pudo abrir el directorio de trabajo";
-
+const char *MENSAJE_PERMISO_NEGADO = "Error! Permiso negado para: ";
 
 // Se verifica la cantidad de argumentos recibida
 void verificar_argumentos(int cantidad) {
@@ -20,21 +20,21 @@ void help_handler(int h, int cantidad){
 	if (h == 1 && cantidad > 2) {
 		printf("%s\n", MENSAJE_ERROR_AYUDA);
 		exit(1);
- 	}	
+ 	}
 	if (h == 1) {
 		printf("%s\n",MENSAJE_AYUDA);
 		exit(0);
-	} 	
+	}
 }
 
-FILE *outpot_ready(int opts, int cant, char** arr){
-	if (opts < cant) {
-		if ((salida = fopen(arr[opts], "w")) == NULL) {
-			printf("%s %s\n",MENSAJE_ERROR_ABRIR_ARCHIVO, arr[opts]);
+FILE *crear_salida(int posicion, int cantidad, char** argumentos){
+	if (posicion < cantidad) {
+		if ((salida = fopen(argumentos[posicion], "w")) == NULL) {
+			printf("%s %s\n",MENSAJE_ERROR_ABRIR_ARCHIVO, argumentos[posicion]);
 			exit(1);
 		}
 		else {
-			//printf("Salida: %s\n", arr[opts]);
+			//printf("Salida: %s\n", argumentos[posicion]);
 			return salida;
 		}
 	}
@@ -42,29 +42,31 @@ FILE *outpot_ready(int opts, int cant, char** arr){
 	return salida;
 }
 
-char *working_dir(){
+void working_dir(char** directorio){
 	char* cp;
-	char* cwd = malloc (sizeof (char) * BUFSIZE);
+	char* cwd = (char*) malloc(sizeof (char) * BUFSIZE);
 
-	if(!(cp = getcwd(cwd, BUFSIZE))) {
+	if(!(cp = getcwd(cwd,BUFSIZE))) {
 		printf("%s\n",MENSAJE_ERROR_ABRIR_DIR);
 	    exit(1);
 	}
 
-	if (directorio == NULL){
-		return cwd;			
+	if (*directorio == NULL){
+		*directorio = cwd;
+
 	} else {
-		// el peo es aqui xD
+
 		//Aqui cp sera 'tls'
 		cp = basename(cwd);
 
-		char* actualpath = malloc(sizeof(char)*BUFSIZE);
+		char* actualpath = (char*) malloc(sizeof(char)*BUFSIZE);
+		printf("actualpath |%s|\n", actualpath);
 
-		realpath(directorio, actualpath);
+		realpath(*directorio, actualpath);
 
-		return actualpath;
+		*directorio = actualpath;
+
 	}
-
 //	return directorio;
 
 }
@@ -81,76 +83,101 @@ int es_oculto(char *direccion) {
 
 //Funcion para determinar si un string representa un directorio
 int es_directorio(char* direccion){
-	
+
 	struct stat buffer;
 	if (stat(direccion, &buffer)) {
-		printf("No se pudo aplicar stat sobre %s\n", direccion);
+		printf("%s%s\n",MENSAJE_PERMISO_NEGADO, direccion);
 	}
 	return S_ISDIR(buffer.st_mode);
 }
 
+char* copiar_string(char* s) {
+	char *resultado = (char*) malloc(sizeof(char)*(strlen(directorio)+1));
+	strcpy(resultado, s);
+	return resultado;
+}
+
 void encolar(char *directorio) {
+	int dirlen;
+	dirlen = (int)strlen(directorio);
 	nodo *nuevo_nodo = (nodo*) malloc(sizeof(nodo));
-	nuevo_nodo -> directorio = strdup(directorio);
-	nuevo_nodo -> siguiente = NULL;
+	directorio[dirlen] = '\0';
+
+	nuevo_nodo->directorio = copiar_string(directorio);
+	nuevo_nodo->siguiente = NULL;
+	nuevo_nodo->directorio[dirlen] = '\0';
 
 	if (cabeza == NULL && cola == NULL) {
 		cabeza = nuevo_nodo;
-		cola = cabeza;
+		cola = nuevo_nodo;
 	}
 	else {
 		cola -> siguiente = nuevo_nodo;
 		cola = nuevo_nodo;
 	}
+
 }
 
 char *desencolar() {
 	if (cabeza == NULL) {
 		return NULL;
 	}
-	char *directorio = strdup(cabeza -> directorio);
-	nodo * nodoC = cabeza;
+
+	char *directorio = copiar_string(cabeza -> directorio);
+
 	cabeza = cabeza -> siguiente;
 	if (cabeza == NULL) {
 		cola = NULL;
 	}
-	free(nodoC);
+
 	return directorio;
 }
 
-void tls(int t_num, FILE *outpot, char *act_dir){
+void explorar_directorio(char* directorio_actual) {
 	DIR *dir;
-	struct dirent * dir_info;
-	char * full_path;
-	strcat(act_dir,"/");
+	struct dirent *informacion_directorio;
+	char *direccion_completa;
 
-	if((dir = opendir(act_dir)) == NULL){
-		printf("%s: %s\n",act_dir,MENSAJE_ERROR_ABRIR_DIR);
+	strcat(directorio_actual,"/");
+
+	int act_name;
+	if((dir = opendir(directorio_actual)) == NULL){
+		printf("%s: %s\n",directorio_actual, MENSAJE_ERROR_ABRIR_DIR);
 		exit(1);
 	}
 
-	while ((dir_info = readdir(dir)) != NULL){
-		if (!es_oculto(dir_info->d_name)){
-			full_path = strdup(act_dir);
-			strcat(full_path,dir_info->d_name);
-			printf("%s\n", full_path);
-			if (es_directorio(full_path)){
-				encolar(full_path);
+	while ((informacion_directorio = readdir(dir)) != NULL){
+		act_name = (int)strlen(informacion_directorio->d_name);
+		informacion_directorio->d_name[act_name]='\0';
+
+		if (!es_oculto(informacion_directorio->d_name)){
+
+			direccion_completa = copiar_string(directorio_actual);
+			strcat(direccion_completa,informacion_directorio->d_name);
+			
+			if (es_directorio(direccion_completa)){
+				encolar(direccion_completa);
 			}
 		}
 	}
 
-	if (outpot == NULL){
-		printf("n: %d\n", t_num);
-		printf("d: %s\n", act_dir);
+}
+
+void tls(int numero_hilos, FILE *salida, char *directorio_actual){
+
+	explorar_directorio(directorio_actual);
+
+	if (salida == NULL){
+		printf("n: %d\n", numero_hilos);
+		printf("d: %s\n", directorio_actual);
 
 	} else {
-		fprintf(outpot,"n: %d\n", t_num);
-		fprintf(outpot,"d: %s\n", act_dir);
+		fprintf(salida,"n: %d\n", numero_hilos);
+		fprintf(salida,"d: %s\n", directorio_actual);
 	}
 
 	while(cabeza != NULL){
-		printf("%s\n",desencolar() );
-	}	
+		explorar_directorio(desencolar());
+	}
 
 }
